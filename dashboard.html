@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Pendaftar — PMB ITB 2025</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      /* ══ APPLICANT DASHBOARD ══ */
+      .dash-wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 36px 40px 56px;
+      }
+      .dash-topbar {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 28px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--border);
+      }
+      .dash-topbar h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 24px;
+        color: var(--white);
+      }
+      .dash-topbar p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      .info-strip {
+        display: flex;
+        background: var(--navy-card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        margin-bottom: 22px;
+      }
+      .info-cell {
+        padding: 18px 26px;
+        flex: 1;
+        border-right: 1px solid var(--border);
+      }
+      .info-cell:last-child {
+        border-right: none;
+        flex: none;
+      }
+      .info-cell-lbl {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+      .info-cell-val {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--white);
+      }
+      .info-cell-val.gold {
+        font-family: "Playfair Display", serif;
+        font-size: 19px;
+        color: var(--gold);
+        letter-spacing: 1.5px;
+      }
+
+      .prog-bar {
+        display: flex;
+        align-items: center;
+        background: var(--navy-card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 26px;
+        margin-bottom: 22px;
+      }
+      .prog-step {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+      .prog-step:last-child {
+        flex: none;
+      }
+      .prog-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.8);
+        border: 2px solid rgba(138, 155, 176, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        transition: all 0.3s;
+      }
+      .prog-circle.done {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--navy);
+      }
+      .prog-circle.active {
+        border-color: var(--gold);
+        color: var(--gold);
+        box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.1);
+      }
+      .prog-lbl {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .prog-lbl.active {
+        color: var(--gold);
+      }
+      .prog-lbl.done2 {
+        color: var(--white);
+      }
+      .prog-sub {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .prog-line {
+        flex: 1;
+        height: 2px;
+        background: rgba(138, 155, 176, 0.1);
+        margin: 0 10px;
+        min-width: 16px;
+      }
+      .prog-line.done {
+        background: var(--gold);
+      }
+
+      .catatan-box {
+        background: rgba(224, 82, 82, 0.06);
+        border: 1px solid rgba(224, 82, 82, 0.18);
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 13px;
+        color: #f08080;
+        margin-bottom: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .catatan-box strong {
+        color: #e05252;
+        flex-shrink: 0;
+      }
+
+      /* PENGUMUMAN */
+      .pengumuman-wrap {
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 22px;
+        position: relative;
+        animation: pengumumanIn 0.4s ease;
+      }
+      .pengumuman-wrap.accepted {
+        background: linear-gradient(
+          135deg,
+          rgba(10, 30, 60, 0.98) 0%,
+          rgba(10, 40, 80, 0.95) 100%
+        );
+        border: 1.5px solid rgba(52, 130, 220, 0.35);
+        box-shadow: 0 0 40px rgba(52, 130, 220, 0.15);
+      }
+      .pengumuman-wrap.rejected {
+        background: linear-gradient(
+          135deg,
+          rgba(40, 8, 8, 0.98) 0%,
+          rgba(60, 12, 12, 0.95) 100%
+        );
+        border: 1.5px solid rgba(220, 60, 60, 0.3);
+        box-shadow: 0 0 40px rgba(220, 60, 60, 0.12);
+      }
+      .pengumuman-header {
+        padding: 20px 24px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 1px solid;
+      }
+      .pengumuman-wrap.accepted .pengumuman-header {
+        border-color: rgba(52, 130, 220, 0.2);
+        background: rgba(30, 80, 160, 0.15);
+      }
+      .pengumuman-wrap.rejected .pengumuman-header {
+        border-color: rgba(220, 60, 60, 0.18);
+        background: rgba(100, 20, 20, 0.15);
+      }
+      .pengumuman-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .pengumuman-wrap.accepted .pengumuman-icon {
+        background: rgba(52, 130, 220, 0.18);
+        border: 2px solid rgba(52, 130, 220, 0.35);
+      }
+      .pengumuman-wrap.rejected .pengumuman-icon {
+        background: rgba(220, 60, 60, 0.15);
+        border: 2px solid rgba(220, 60, 60, 0.3);
+      }
+      .pengumuman-title {
+        font-family: "Playfair Display", serif;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .pengumuman-wrap.accepted .pengumuman-title {
+        color: #7ab8f5;
+      }
+      .pengumuman-wrap.rejected .pengumuman-title {
+        color: #f08080;
+      }
+      .pengumuman-subtitle {
+        font-size: 12px;
+        margin-top: 3px;
+      }
+      .pengumuman-wrap.accepted .pengumuman-subtitle {
+        color: rgba(120, 180, 255, 0.6);
+      }
+      .pengumuman-wrap.rejected .pengumuman-subtitle {
+        color: rgba(240, 128, 128, 0.5);
+      }
+      .pengumuman-body {
+        padding: 20px 24px;
+      }
+      .pengumuman-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+      .pengumuman-field {
+        padding: 12px 16px;
+        border-radius: 10px;
+      }
+      .pengumuman-wrap.accepted .pengumuman-field {
+        background: rgba(52, 130, 220, 0.07);
+        border: 1px solid rgba(52, 130, 220, 0.12);
+      }
+      .pengumuman-wrap.rejected .pengumuman-field {
+        background: rgba(220, 60, 60, 0.06);
+        border: 1px solid rgba(220, 60, 60, 0.1);
+      }
+      .pengumuman-field-lbl {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+      .pengumuman-wrap.accepted .pengumuman-field-lbl {
+        color: rgba(120, 180, 255, 0.6);
+      }
+      .pengumuman-wrap.rejected .pengumuman-field-lbl {
+        color: rgba(240, 128, 128, 0.5);
+      }
+      .pengumuman-field-val {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--white);
+      }
+      .pengumuman-result-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-bottom: 14px;
+      }
+      .pengumuman-wrap.accepted .pengumuman-result-badge {
+        background: rgba(52, 130, 220, 0.18);
+        border: 1.5px solid rgba(52, 130, 220, 0.4);
+        color: #7ab8f5;
+      }
+      .pengumuman-wrap.rejected .pengumuman-result-badge {
+        background: rgba(220, 60, 60, 0.15);
+        border: 1.5px solid rgba(220, 60, 60, 0.35);
+        color: #f08080;
+      }
+      .pengumuman-note {
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .pengumuman-wrap.accepted .pengumuman-note {
+        background: rgba(52, 130, 220, 0.06);
+        border: 1px solid rgba(52, 130, 220, 0.12);
+        color: rgba(180, 220, 255, 0.8);
+      }
+      .pengumuman-wrap.rejected .pengumuman-note {
+        background: rgba(220, 60, 60, 0.05);
+        border: 1px solid rgba(220, 60, 60, 0.1);
+        color: rgba(255, 180, 180, 0.75);
+      }
+      .pengumuman-watermark {
+        position: absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 90px;
+        opacity: 0.04;
+        pointer-events: none;
+        font-family: "Playfair Display", serif;
+        font-weight: 900;
+        user-select: none;
+      }
+      .pengumuman-wrap.accepted .pengumuman-watermark {
+        color: #3a9fe8;
+      }
+      .pengumuman-wrap.rejected .pengumuman-watermark {
+        color: #e05252;
+      }
+      .pengumuman-date {
+        font-size: 11px;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid;
+      }
+      .pengumuman-wrap.accepted .pengumuman-date {
+        border-color: rgba(52, 130, 220, 0.12);
+        color: rgba(120, 180, 255, 0.5);
+      }
+      .pengumuman-wrap.rejected .pengumuman-date {
+        border-color: rgba(220, 60, 60, 0.1);
+        color: rgba(240, 128, 128, 0.45);
+      }
+      @keyframes pengumumanIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .readonly-banner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(201, 162, 39, 0.05);
+        border: 1px solid rgba(201, 162, 39, 0.15);
+        border-radius: 10px;
+        padding: 13px 16px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        color: var(--gold-pale);
+      }
+      .form-section {
+        background: var(--navy-card);
+        border: 1px solid var(--border-soft);
+        border-radius: 13px;
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
+      .sec-head {
+        padding: 14px 20px;
+        background: rgba(8, 15, 30, 0.35);
+        border-bottom: 1px solid var(--border-soft);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sec-ico {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background: var(--gold-dim);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+      }
+      .sec-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--white);
+      }
+      .sec-body {
+        padding: 20px;
+      }
+      .form-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 6px;
+      }
+      .upload-zone {
+        border: 2px dashed rgba(201, 162, 39, 0.18);
+        border-radius: 10px;
+        padding: 20px 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+      .upload-zone:hover {
+        border-color: var(--gold);
+        background: rgba(201, 162, 39, 0.03);
+      }
+      .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .upload-ico {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+      .upload-txt {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .upload-txt span {
+        color: var(--gold);
+      }
+      .upload-thumb {
+        width: 68px;
+        height: 68px;
+        object-fit: cover;
+        border-radius: 7px;
+        margin: 0 auto 6px;
+        display: block;
+        border: 2px solid var(--gold);
+      }
+      .header-website {
+        display: flex;
+        align-items: center;
+        width: 28rem;
+        height: 50px;
+        background-image: url("backgrounditb.jpg");
+        margin-right: 8rem;
+        border-radius: 10px;
+        background-size: cover;
+      }
+
+      @media (max-width: 900px) {
+        .info-strip {
+          flex-direction: column;
+        }
+        .info-cell {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .info-cell:last-child {
+          border-bottom: none;
+        }
+        .prog-line {
+          display: none;
+        }
+        .prog-bar {
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+      }
+      @media (max-width: 680px) {
+        .dash-wrap {
+          padding: 24px 16px 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="logo">
+        <img
+          class="logo-badge"
+          src="logoitb.jpg"
+          alt="ITB"
+          width="40"
+          height="40"
+        />
+        <div class="logo-text">
+          <h1>Institut Teknologi Bandung</h1>
+          <p>Penerimaan Mahasiswa Baru 2026</p>
+        </div>
+      </div>
+      <a href="https://itb.ac.id/" class="header-link">
+        <div class="header-website"></div>
+      </a>
+      <div class="header-nav">
+        <div class="header-user">
+          <div class="header-avatar" id="nav-avatar">A</div>
+          <span class="header-username" id="nav-username">—</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">Keluar</button>
+      </div>
+    </header>
+
+    <!-- DASHBOARD PENDAFTAR -->
+    <div class="dash-wrap">
+      <div class="dash-topbar">
+        <div>
+          <h2>Dashboard Pendaftar</h2>
+          <p>Lengkapi dan submit data pendaftaran Anda</p>
+        </div>
+      </div>
+
+      <div class="info-strip">
+        <div class="info-cell">
+          <div class="info-cell-lbl">Nomor Pendaftaran</div>
+          <div class="info-cell-val gold" id="user-nomor">—</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-lbl">Email Terdaftar</div>
+          <div class="info-cell-val" id="user-email" style="font-size: 13px">
+            —
+          </div>
+        </div>
+        <div class="info-cell" style="padding-right: 28px">
+          <div class="info-cell-lbl">Status Pendaftaran</div>
+          <div style="margin-top: 5px" id="user-status-badge">
+            <span class="badge badge-draft">Draft</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="catatan-admin" class="catatan-box hidden">
+        <strong>📋 Catatan:</strong><span id="catatan-text"></span>
+      </div>
+
+      <!-- PENGUMUMAN HASIL SELEKSI -->
+      <div id="pengumuman-section" class="hidden"></div>
+
+      <!-- PROGRESS BAR -->
+      <div class="prog-bar">
+        <div class="prog-step">
+          <div class="prog-circle" id="step1">1</div>
+          <div class="prog-info">
+            <div class="prog-lbl" id="step1-label">Isi Data</div>
+            <div class="prog-sub">Formulir pendaftaran</div>
+          </div>
+        </div>
+        <div class="prog-line" id="conn1"></div>
+        <div class="prog-step">
+          <div class="prog-circle" id="step2">2</div>
+          <div class="prog-info">
+            <div class="prog-lbl" id="step2-label">Submit</div>
+            <div class="prog-sub">Kirim ke admin</div>
+          </div>
+        </div>
+        <div class="prog-line" id="conn2"></div>
+        <div class="prog-step">
+          <div class="prog-circle" id="step3">3</div>
+          <div class="prog-info">
+            <div class="prog-lbl" id="step3-label">Verifikasi</div>
+            <div class="prog-sub">Review admin</div>
+          </div>
+        </div>
+        <div class="prog-line" id="conn3"></div>
+        <div class="prog-step">
+          <div class="prog-circle" id="step4">4</div>
+          <div class="prog-info">
+            <div class="prog-lbl" id="step4-label">Pengumuman</div>
+            <div class="prog-sub">Hasil akhir</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="readonly-notice" class="readonly-banner hidden">
+        🔒 Data Anda sedang dalam proses verifikasi dan tidak dapat diubah
+        sementara ini.
+      </div>
+
+      <!-- DATA PRIBADI -->
+      <div class="form-section">
+        <div class="sec-head">
+          <div class="sec-ico">👤</div>
+          <span class="sec-title">Data Pribadi</span>
+        </div>
+        <div class="sec-body">
+          <div class="form-grid">
+            <div class="form-group" style="grid-column: 1/-1">
+              <label>Nama Lengkap</label>
+              <input
+                type="text"
+                id="f-nama"
+                placeholder="Sesuai KTP / Ijazah"
+              />
+            </div>
+            <div class="form-group">
+              <label>Tempat Lahir</label>
+              <input
+                type="text"
+                id="f-tempat-lahir"
+                placeholder="Kota kelahiran"
+              />
+            </div>
+            <div class="form-group">
+              <label>Tanggal Lahir</label>
+              <input type="date" id="f-tgl-lahir" />
+            </div>
+            <div class="form-group">
+              <label>Jenis Kelamin</label>
+              <select id="f-jk">
+                <option value="">Pilih...</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>No. Telepon / HP</label>
+              <input type="tel" id="f-telp" placeholder="08xxxxxxxxxx" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALAMAT -->
+      <div class="form-section">
+        <div class="sec-head">
+          <div class="sec-ico">🏠</div>
+          <span class="sec-title">Alamat</span>
+        </div>
+        <div class="sec-body">
+          <div class="form-grid">
+            <div class="form-group" style="grid-column: 1/-1">
+              <label>Alamat Lengkap</label>
+              <textarea
+                id="f-alamat"
+                placeholder="Jalan, nomor rumah, RT/RW, kelurahan, kecamatan"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Kota / Kabupaten</label>
+              <input type="text" id="f-kota" placeholder="Nama kota" />
+            </div>
+            <div class="form-group">
+              <label>Provinsi</label>
+              <input type="text" id="f-provinsi" placeholder="Nama provinsi" />
+            </div>
+            <div class="form-group">
+              <label>Kode Pos</label>
+              <input
+                type="text"
+                id="f-kodepos"
+                placeholder="40132"
+                maxlength="5"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDIDIKAN -->
+      <div class="form-section">
+        <div class="sec-head">
+          <div class="sec-ico">🎓</div>
+          <span class="sec-title">Riwayat Pendidikan</span>
+        </div>
+        <div class="sec-body">
+          <div class="form-grid">
+            <div class="form-group" style="grid-column: 1/-1">
+              <label>Asal Sekolah (SMA / SMK / MA)</label>
+              <input
+                type="text"
+                id="f-sekolah"
+                placeholder="Nama lengkap sekolah"
+              />
+            </div>
+            <div class="form-group">
+              <label>Jurusan</label>
+              <select id="f-jurusan-sekolah">
+                <option value="">Pilih...</option>
+                <option>IPA</option>
+                <option>IPS</option>
+                <option>Rpl</option>
+                <option>Otomotif</option>
+                <option>Tataboga</option>
+                <option>Akutansi</option>
+                <option>Lainnya</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tahun Lulus</label>
+              <select id="f-tahun-lulus">
+                <option value="">Pilih...</option>
+                <option>2026</option>
+                <option>2025</option>
+                <option>2024</option>
+                <option>2023</option>
+                <option>2022</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODI -->
+      <div class="form-section">
+        <div class="sec-head">
+          <div class="sec-ico">📚</div>
+          <span class="sec-title">Pilihan Program Studi</span>
+        </div>
+        <div class="sec-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Pilihan 1 (Wajib)</label>
+              <select id="f-prodi1">
+                <option value="">Pilih Prodi...</option>
+                <optgroup label="Teknik Elektro & Informatika">
+                  <option>Teknik Informatika</option>
+                  <option>Teknik Elektro</option>
+                  <option>Sistem dan Teknologi Informasi</option>
+                </optgroup>
+                <optgroup label="Teknik Sipil & Lingkungan">
+                  <option>Teknik Sipil</option>
+                  <option>Teknik Lingkungan</option>
+                </optgroup>
+                <optgroup label="Bisnis & Manajemen">
+                  <option>Manajemen</option>
+                  <option>Kewirausahaan</option>
+                </optgroup>
+                <optgroup label="FMIPA">
+                  <option>Matematika</option>
+                  <option>Fisika</option>
+                  <option>Kimia</option>
+                  <option>Biologi</option>
+                </optgroup>
+                <optgroup label="Arsitektur & Perencanaan">
+                  <option>Arsitektur</option>
+                  <option>Perencanaan Wilayah dan Kota</option>
+                </optgroup>
+                <optgroup label="Teknik Mesin & Dirgantara">
+                  <option>Teknik Mesin</option>
+                  <option>Teknik Dirgantara</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pilihan 2 (Opsional)</label>
+              <select id="f-prodi2">
+                <option value="">Pilih Prodi...</option>
+                <optgroup label="Teknik Elektro & Informatika">
+                  <option>Teknik Informatika</option>
+                  <option>Teknik Elektro</option>
+                  <option>Sistem dan Teknologi Informasi</option>
+                </optgroup>
+                <optgroup label="Teknik Sipil & Lingkungan">
+                  <option>Teknik Sipil</option>
+                  <option>Teknik Lingkungan</option>
+                </optgroup>
+                <optgroup label="Bisnis & Manajemen">
+                  <option>Manajemen</option>
+                  <option>Kewirausahaan</option>
+                </optgroup>
+                <optgroup label="FMIPA">
+                  <option>Matematika</option>
+                  <option>Fisika</option>
+                  <option>Kimia</option>
+                  <option>Biologi</option>
+                </optgroup>
+                <optgroup label="Arsitektur & Perencanaan">
+                  <option>Arsitektur</option>
+                  <option>Perencanaan Wilayah dan Kota</option>
+                </optgroup>
+                <optgroup label="Teknik Mesin & Dirgantara">
+                  <option>Teknik Mesin</option>
+                  <option>Teknik Dirgantara</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-group" style="grid-column: 1/-1">
+              <label>Jalur Seleksi</label>
+              <select id="f-jalur">
+                <option value="">Pilih Jalur Seleksi...</option>
+                <option value="PMB Jalur Mandiri 2025">
+                  PMB Jalur Mandiri 2026
+                </option>
+                <option value="PMB Jalur Prestasi 2026">
+                  PMB Jalur Prestasi 2026
+                </option>
+                <option value="PMB Jalur Beasiswa 2026">
+                  PMB Jalur Beasiswa 2026
+                </option>
+                <option value="PMB Jalur Kemitraan 2026">
+                  PMB Jalur Kemitraan 2026
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPLOAD DOKUMEN -->
+      <div class="form-section">
+        <div class="sec-head">
+          <div class="sec-ico">📄</div>
+          <span class="sec-title">Upload Dokumen</span>
+        </div>
+        <div class="sec-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Foto 3×4 (JPG/PNG, maks 2 MB)</label>
+              <div
+                class="upload-zone"
+                onclick="document.getElementById('upload-foto').click()"
+              >
+                <input
+                  type="file"
+                  id="upload-foto"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="uploadFile('foto', this)"
+                />
+                <div id="foto-preview-container">
+                  <div class="upload-ico">📷</div>
+                  <div class="upload-txt">
+                    <span>Klik untuk upload</span> atau seret file
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Ijazah / SKL (JPG/PNG/PDF, maks 2 MB)</label>
+              <div
+                class="upload-zone"
+                onclick="document.getElementById('upload-ijazah').click()"
+              >
+                <input
+                  type="file"
+                  id="upload-ijazah"
+                  accept="image/*,.pdf"
+                  style="display: none"
+                  onchange="uploadFile('ijazah', this)"
+                />
+                <div id="ijazah-preview-container">
+                  <div class="upload-ico">📑</div>
+                  <div class="upload-txt">
+                    <span>Klik untuk upload</span> atau seret file
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="form-actions" id="form-actions" style="margin-top: 6px">
+        <button class="btn btn-ghost" onclick="saveData()">
+          💾 Simpan Draft
+        </button>
+        <button class="btn btn-primary" onclick="submitForm()">
+          🚀 Submit Pendaftaran
+        </button>
+      </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+      let isReadonly = false;
+
+      /** Inisialisasi dashboard setelah cek sesi */
+      async function init() {
+        const res = await api("auth.php?action=check");
+        if (!res.loggedIn || res.role === "admin") {
+          window.location.href = "index.html";
+          return;
+        }
+        const data = res.data;
+        const name = data.nama_lengkap || data.email || "—";
+        document.getElementById("nav-username").textContent = name;
+        document.getElementById("nav-avatar").textContent =
+          name[0].toUpperCase();
+        populateDashboard(data);
+      }
+
+      function populateDashboard(d) {
+        document.getElementById("user-nomor").textContent =
+          d.nomor_pendaftaran || "—";
+        document.getElementById("user-email").textContent = d.email || "—";
+        const status = d.status || "draft";
+        document.getElementById("user-status-badge").innerHTML =
+          statusBadge(status);
+
+        if (d.catatan_admin) {
+          document.getElementById("catatan-admin").classList.remove("hidden");
+          document.getElementById("catatan-text").textContent = d.catatan_admin;
+        }
+
+        renderPengumuman(d);
+
+        // Progress steps
+        const steps = ["draft", "pending", "verified", "accepted"];
+        const idx = steps.indexOf(status);
+        for (let i = 1; i <= 4; i++) {
+          const sc = document.getElementById("step" + i);
+          const sl = document.getElementById("step" + i + "-label");
+          sc.classList.remove("done", "active");
+          sl.classList.remove("active", "done2");
+          if (i - 1 < idx) {
+            sc.classList.add("done");
+            sc.textContent = "✓";
+            sl.classList.add("done2");
+          } else if (i - 1 === idx) {
+            sc.classList.add("active");
+            sl.classList.add("active");
+          }
+        }
+        for (let i = 1; i <= 3; i++)
+          document
+            .getElementById("conn" + i)
+            .classList.toggle("done", i <= idx);
+
+        isReadonly = ["verified", "accepted", "rejected"].includes(status);
+        if (isReadonly) {
+          document.getElementById("readonly-notice").classList.remove("hidden");
+          document.getElementById("form-actions").classList.add("hidden");
+          document
+            .querySelectorAll(
+              ".dash-wrap input,.dash-wrap select,.dash-wrap textarea",
+            )
+            .forEach((el) => (el.disabled = true));
+        }
+
+        // Isi form dengan data existing
+        const map = {
+          "f-nama": d.nama_lengkap,
+          "f-tempat-lahir": d.tempat_lahir,
+          "f-tgl-lahir": d.tanggal_lahir,
+          "f-jk": d.jenis_kelamin,
+          "f-telp": d.no_telepon,
+          "f-alamat": d.alamat,
+          "f-kota": d.kota,
+          "f-provinsi": d.provinsi,
+          "f-kodepos": d.kode_pos,
+          "f-sekolah": d.asal_sekolah,
+          "f-jurusan-sekolah": d.jurusan_sekolah,
+          "f-tahun-lulus": d.tahun_lulus,
+          "f-prodi1": d.pilihan_prodi_1,
+          "f-prodi2": d.pilihan_prodi_2,
+          "f-jalur": d.jalur_seleksi,
+        };
+        for (const [id, val] of Object.entries(map)) {
+          const el = document.getElementById(id);
+          if (el && val) el.value = val;
+        }
+
+        if (d.foto_url || d.foto) {
+          const fotoSrc = d.foto_url || "api/uploads/" + d.foto;
+          document.getElementById("foto-preview-container").innerHTML =
+            `<img src="${fotoSrc}" class="upload-thumb" alt="Foto"
+              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2268%22 height=%2268%22%3E%3Crect width=%2268%22 height=%2268%22 fill=%22%23132035%22 rx=%227%22/%3E%3Ctext x=%2234%22 y=%2238%22 font-size=%2224%22 text-anchor=%22middle%22 fill=%22%23c9a227%22%3E📷%3C/text%3E%3C/svg%3E';">
+             <p style="font-size:11px;color:var(--gold)">Foto terupload ✓</p>`;
+        }
+
+        if (d.ijazah_url || d.ijazah) {
+          const ijazahSrc = d.ijazah_url || "api/uploads/" + d.ijazah;
+          const ext = (d.ijazah || "").split(".").pop().toLowerCase();
+          document.getElementById("ijazah-preview-container").innerHTML =
+            ext === "pdf"
+              ? `<div class="upload-ico">📑</div>
+                 <a href="${ijazahSrc}" target="_blank" style="font-size:11px;color:var(--gold)">PDF terupload ✓ — Klik untuk lihat</a>`
+              : `<img src="${ijazahSrc}" class="upload-thumb" alt="Ijazah"
+                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2268%22 height=%2268%22%3E%3Crect width=%2268%22 height=%2268%22 fill=%22%23132035%22 rx=%227%22/%3E%3Ctext x=%2234%22 y=%2238%22 font-size=%2224%22 text-anchor=%22middle%22 fill=%22%23c9a227%22%3E📑%3C/text%3E%3C/svg%3E';">
+                 <p style="font-size:11px;color:var(--gold)">Ijazah terupload ✓</p>`;
+        }
+      }
+
+      function renderPengumuman(d) {
+        const sec = document.getElementById("pengumuman-section");
+        const status = d.status || "draft";
+        if (status !== "accepted" && status !== "rejected") {
+          sec.classList.add("hidden");
+          sec.innerHTML = "";
+          return;
+        }
+        const isAccepted = status === "accepted";
+        const tgl = d.updated_at || d.tgl_daftar || null;
+        const tglStr = tgl
+          ? new Date(tgl).toLocaleDateString("id-ID", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })
+          : "—";
+        const prodiDiterima = isAccepted ? d.pilihan_prodi_1 || "—" : "—";
+        const jalurSeleksi = d.jalur_seleksi || "PMB Jalur Mandiri 2025";
+        const noteText = isAccepted
+          ? "Selamat! Anda dinyatakan <strong>LULUS SELEKSI</strong> Penerimaan Mahasiswa Baru ITB 2026. Silakan ikuti petunjuk registrasi ulang yang akan dikirimkan melalui email terdaftar Anda."
+          : "Mohon maaf, Anda dinyatakan <strong>TIDAK LULUS SELEKSI</strong> PMB ITB 2026. Tetap semangat dan terus berusaha. Anda dapat mencoba kembali pada jalur seleksi lainnya.";
+        sec.innerHTML = `
+          <div class="pengumuman-wrap ${status}">
+            <div class="pengumuman-watermark">${isAccepted ? "✓" : "✕"}</div>
+            <div class="pengumuman-header">
+              <div class="pengumuman-icon">${isAccepted ? "🎓" : "📋"}</div>
+              <div>
+                <div class="pengumuman-title">${isAccepted ? "Selamat, Anda Diterima!" : "Mohon Maaf, Tidak Diterima"}</div>
+                <div class="pengumuman-subtitle">Pengumuman Hasil Seleksi PMB ITB 2026</div>
+              </div>
+            </div>
+            <div class="pengumuman-body">
+              <div style="margin-bottom:14px">
+                <div class="pengumuman-result-badge">${isAccepted ? "✅ DITERIMA" : "❌ TIDAK DITERIMA"}</div>
+              </div>
+              <div class="pengumuman-row">
+                <div class="pengumuman-field">
+                  <div class="pengumuman-field-lbl">Nama Lengkap</div>
+                  <div class="pengumuman-field-val">${d.nama_lengkap || "—"}</div>
+                </div>
+                <div class="pengumuman-field">
+                  <div class="pengumuman-field-lbl">Nomor Pendaftaran</div>
+                  <div class="pengumuman-field-val" style="font-family:'Playfair Display',serif;letter-spacing:1.5px">${d.nomor_pendaftaran || "—"}</div>
+                </div>
+                <div class="pengumuman-field">
+                  <div class="pengumuman-field-lbl">Program Studi</div>
+                  <div class="pengumuman-field-val">${isAccepted ? prodiDiterima : "—"}</div>
+                </div>
+                <div class="pengumuman-field">
+                  <div class="pengumuman-field-lbl">Jalur Seleksi</div>
+                  <div class="pengumuman-field-val">${jalurSeleksi}</div>
+                </div>
+              </div>
+              <div class="pengumuman-note">${noteText}${d.catatan_admin ? "<br><br><strong>Catatan Admin:</strong> " + d.catatan_admin : ""}</div>
+              <div class="pengumuman-date">📅 Tanggal Pengumuman: ${tglStr}</div>
+            </div>
+          </div>`;
+        sec.classList.remove("hidden");
+      }
+
+      async function saveData(silent = false) {
+        if (isReadonly) return;
+        const res = await api("applicant.php?action=update", "POST", {
+          nama_lengkap: document.getElementById("f-nama").value,
+          tempat_lahir: document.getElementById("f-tempat-lahir").value,
+          tanggal_lahir: document.getElementById("f-tgl-lahir").value,
+          jenis_kelamin: document.getElementById("f-jk").value,
+          no_telepon: document.getElementById("f-telp").value,
+          alamat: document.getElementById("f-alamat").value,
+          kota: document.getElementById("f-kota").value,
+          provinsi: document.getElementById("f-provinsi").value,
+          kode_pos: document.getElementById("f-kodepos").value,
+          asal_sekolah: document.getElementById("f-sekolah").value,
+          jurusan_sekolah: document.getElementById("f-jurusan-sekolah").value,
+          tahun_lulus: document.getElementById("f-tahun-lulus").value,
+          pilihan_prodi_1: document.getElementById("f-prodi1").value,
+          pilihan_prodi_2: document.getElementById("f-prodi2").value,
+          jalur_seleksi: document.getElementById("f-jalur").value,
+        });
+        if (!silent) toast(res.message, res.success ? "success" : "error");
+        return res;
+      }
+
+      async function submitForm() {
+        if (isReadonly) return;
+        if (
+          !confirm(
+            "Setelah submit, data tidak dapat diubah hingga diverifikasi admin. Lanjutkan?",
+          )
+        )
+          return;
+        await saveData(true);
+        const res = await api("applicant.php?action=submit", "POST");
+        toast(res.message, res.success ? "success" : "error");
+        if (res.success) setTimeout(() => init(), 1200);
+      }
+
+      async function uploadFile(type, input) {
+        if (!input.files[0]) return;
+        if (isReadonly) {
+          toast("Tidak bisa upload setelah diverifikasi", "error");
+          return;
+        }
+        const fd = new FormData();
+        fd.append("file", input.files[0]);
+        fd.append("type", type);
+        const res = await fetch(API + "applicant.php?action=upload", {
+          method: "POST",
+          body: fd,
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (data.success) {
+          const f = input.files[0];
+          const c = document.getElementById(type + "-preview-container");
+          // Simpan upload_url dari API di data attribute agar bisa dipakai kembali
+          c.dataset.uploadUrl = data.upload_url || "";
+          if (f.type.startsWith("image/")) {
+            const r = new FileReader();
+            r.onload = (e) => {
+              c.innerHTML = `<img src="${e.target.result}" class="upload-thumb" alt="${type}">
+                 <p style="font-size:11px;color:var(--gold)">${type === "foto" ? "Foto" : "Ijazah"} terupload ✓</p>`;
+            };
+            r.readAsDataURL(f);
+          } else {
+            // PDF: gunakan upload_url langsung
+            const pdfUrl = data.upload_url || "#";
+            c.innerHTML = `<div class="upload-ico">📑</div>
+                 <a href="${pdfUrl}" target="_blank" style="font-size:11px;color:var(--gold)">PDF terupload ✓ — Klik untuk lihat</a>`;
+          }
+          toast("File berhasil diupload");
+        } else {
+          toast(data.message, "error");
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>

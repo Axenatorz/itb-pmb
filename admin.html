@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel — PMB ITB 2026</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      /* ══ ADMIN LAYOUT ══ */
+      body {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .admin-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 35px 28px;
+        height: 56px;
+        flex-shrink: 0;
+        background: rgba(8, 15, 30, 0.97);
+        border-bottom: 1px solid var(--border);
+        z-index: 50;
+      }
+      .adm-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .adm-logo .logo-badge {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+        border-radius: 8px;
+      }
+      .adm-logo-text h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 15px;
+        color: var(--white);
+      }
+      .adm-logo-text span {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .adm-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .adm-user {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px 11px 5px 5px;
+        background: var(--navy-card);
+        border: 1px solid var(--border);
+        border-radius: 100px;
+      }
+      .adm-av {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .adm-user span {
+        font-size: 12px;
+        color: var(--gray);
+      }
+
+      .admin-body {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .admin-sidebar {
+        width: var(--sidebar-w);
+        flex-shrink: 0;
+        background: rgba(6, 12, 24, 0.98);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .sb-brand {
+        padding: 20px 18px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .sb-brand h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 14px;
+        color: var(--gold);
+      }
+      .sb-brand p {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .sb-section {
+        padding: 14px 18px 5px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+      .sb-nav {
+        padding: 0 8px;
+      }
+      .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        padding: 9px 11px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        border-radius: 8px;
+        color: var(--muted);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        text-align: left;
+        transition: all 0.16s;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .nav-btn:hover {
+        background: rgba(201, 162, 39, 0.07);
+        color: var(--white);
+      }
+      .nav-btn.active {
+        background: rgba(201, 162, 39, 0.12);
+        color: var(--gold);
+      }
+      .nav-btn .ni {
+        font-size: 14px;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .nav-btn .nbadge {
+        margin-left: auto;
+        padding: 2px 7px;
+        border-radius: 100px;
+        font-size: 10px;
+        font-weight: 700;
+        background: rgba(241, 196, 15, 0.15);
+        color: #f1c40f;
+      }
+      .sb-footer {
+        margin-top: auto;
+        padding: 10px 8px 14px;
+        border-top: 1px solid var(--border);
+      }
+
+      .admin-main {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: rgba(8, 15, 30, 0.3);
+      }
+      .admin-content {
+        padding: 28px 32px 48px;
+      }
+
+      .page-head {
+        margin-bottom: 24px;
+      }
+      .page-head h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        color: var(--white);
+      }
+      .page-head p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* Stats */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .stat-tile {
+        background: var(--navy-card);
+        border: 1px solid var(--border-soft);
+        border-radius: 12px;
+        padding: 16px 18px;
+        transition:
+          border-color 0.2s,
+          transform 0.15s;
+        cursor: default;
+      }
+      .stat-tile:hover {
+        border-color: var(--border);
+        transform: translateY(-2px);
+      }
+      .stat-ico {
+        font-size: 17px;
+        margin-bottom: 8px;
+        opacity: 0.6;
+      }
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        line-height: 1;
+        color: var(--gold);
+      }
+      .stat-num.cg {
+        color: var(--muted);
+      }
+      .stat-num.cy {
+        color: var(--yellow);
+      }
+      .stat-num.cb {
+        color: var(--blue);
+      }
+      .stat-num.cs {
+        color: var(--green);
+      }
+      .stat-num.cr {
+        color: var(--red);
+      }
+      .stat-lbl {
+        font-size: 10.5px;
+        color: var(--muted);
+        margin-top: 4px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      /* Table card */
+      .tcard {
+        background: var(--navy-card);
+        border: 1px solid var(--border-soft);
+        border-radius: 13px;
+        overflow: hidden;
+      }
+      .tcard-head {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .tcard-head h3 {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--white);
+        flex: 1;
+        min-width: 80px;
+      }
+      .s-input {
+        padding: 7px 12px;
+        background: rgba(8, 15, 30, 0.7);
+        border: 1px solid rgba(138, 155, 176, 0.15);
+        border-radius: 7px;
+        color: var(--white);
+        font-size: 12.5px;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        width: 180px;
+      }
+      .s-input:focus {
+        border-color: var(--gold);
+      }
+      .s-select {
+        padding: 7px 10px;
+        background: rgba(8, 15, 30, 0.7);
+        border: 1px solid rgba(138, 155, 176, 0.15);
+        border-radius: 7px;
+        color: var(--white);
+        font-size: 12.5px;
+        font-family: "DM Sans", sans-serif;
+        outline: none;
+        cursor: pointer;
+      }
+      .s-select option {
+        background: var(--navy-mid);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead tr {
+        background: rgba(8, 15, 30, 0.55);
+      }
+      th {
+        padding: 10px 15px;
+        text-align: left;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      td {
+        padding: 12px 15px;
+        font-size: 13px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        vertical-align: middle;
+        color: var(--white);
+      }
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.015);
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .td-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .action-group {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+        padding: 11px 16px;
+        border-top: 1px solid var(--border-soft);
+      }
+      .pg-btn {
+        padding: 5px 10px;
+        border-radius: 6px;
+        border: 1px solid rgba(138, 155, 176, 0.12);
+        background: transparent;
+        color: var(--muted);
+        font-size: 12px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.16s;
+      }
+      .pg-btn:hover,
+      .pg-btn.active {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .pg-btn:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+      }
+
+      /* Detail modal grid */
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px;
+        margin-bottom: 12px;
+      }
+      .detail-item label {
+        font-size: 10.5px;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        display: block;
+        margin-bottom: 3px;
+      }
+      .detail-item span {
+        font-size: 13px;
+        color: var(--white);
+      }
+      .detail-divider {
+        grid-column: 1/-1;
+        height: 1px;
+        background: var(--border-soft);
+      }
+
+      .catatan-box {
+        background: rgba(224, 82, 82, 0.06);
+        border: 1px solid rgba(224, 82, 82, 0.18);
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 13px;
+        color: #f08080;
+        margin-bottom: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .catatan-box strong {
+        color: #e05252;
+        flex-shrink: 0;
+      }
+      .header-website {
+        display: flex;
+        align-items: center;
+        width: 28rem;
+        height: 50px;
+        background-image: url("backgrounditb.jpg");
+        margin-left: 4rem;
+        border-radius: 10px;
+        background-size: cover;
+      }
+
+      @media (max-width: 680px) {
+        .admin-topbar {
+          padding: 0 14px;
+        }
+        .admin-sidebar {
+          display: none;
+        }
+        .admin-content {
+          padding: 20px 16px;
+        }
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOPBAR ADMIN -->
+    <div class="admin-topbar">
+      <div class="adm-logo">
+        <img
+          class="logo-badge"
+          src="logoitb.jpg"
+          alt="ITB"
+          width="45"
+          height="45;"
+        />
+        <div class="adm-logo-text">
+          <h2>Admin Panel</h2>
+          <span>PMB ITB 2026</span>
+        </div>
+      </div>
+      <a href="https://itb.ac.id/" class="header-link">
+        <div class="header-website"></div>
+      </a>
+      <div class="adm-right">
+        <div class="adm-user">
+          <div class="adm-av">A</div>
+          <span>Admin ITB</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">
+          🚪 Keluar
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <!-- SIDEBAR -->
+      <aside class="admin-sidebar">
+        <div class="sb-brand">
+          <h3>Manajemen PMB</h3>
+          <p>Institut Teknologi Bandung</p>
+        </div>
+        <div class="sb-section">Menu Utama</div>
+        <nav class="sb-nav">
+          <button
+            class="nav-btn active"
+            id="nav-dashboard"
+            onclick="adminNav('dashboard')"
+          >
+            <span class="ni">📊</span>Dashboard
+          </button>
+          <button
+            class="nav-btn"
+            id="nav-pending"
+            onclick="adminNav('pending')"
+          >
+            <span class="ni">⏳</span>Menunggu Verifikasi
+            <span class="nbadge" id="badge-pending">0</span>
+          </button>
+          <button class="nav-btn" id="nav-all" onclick="adminNav('all')">
+            <span class="ni">📋</span>Semua Pendaftar
+          </button>
+        </nav>
+        <div class="sb-section">Status</div>
+        <nav class="sb-nav">
+          <button
+            class="nav-btn"
+            id="nav-accepted"
+            onclick="adminNav('accepted')"
+          >
+            <span class="ni">✅</span>Diterima
+          </button>
+          <button
+            class="nav-btn"
+            id="nav-rejected"
+            onclick="adminNav('rejected')"
+          >
+            <span class="ni">❌</span>Ditolak
+          </button>
+          <button
+            class="nav-btn"
+            id="nav-verified"
+            onclick="adminNav('verified')"
+          >
+            <span class="ni">🔵</span>Terverifikasi
+          </button>
+        </nav>
+        <div class="sb-footer" id="sb-footerid">
+          <button class="nav-btn" onclick="logout()">
+            <span class="ni">🚪</span>Keluar
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="admin-main">
+        <div class="admin-content">
+          <!-- VIEW: DASHBOARD -->
+          <div id="admin-view-dashboard">
+            <div class="page-head">
+              <h2>Dashboard</h2>
+              <p>Ringkasan penerimaan mahasiswa baru ITB 2026</p>
+            </div>
+            <div class="stats-row" id="stats-grid"></div>
+            <div class="tcard">
+              <div class="tcard-head"><h3>Aktivitas Terbaru</h3></div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nama Pendaftar</th>
+                    <th>No. Pendaftaran</th>
+                    <th>Status</th>
+                    <th>Terakhir Update</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- VIEW: LIST PENDAFTAR -->
+          <div id="admin-view-list" class="hidden">
+            <div class="page-head">
+              <h2 id="list-title">Semua Pendaftar</h2>
+              <p id="list-subtitle">Kelola dan verifikasi data pendaftar</p>
+            </div>
+            <div class="tcard">
+              <div class="tcard-head">
+                <h3 id="list-count">—</h3>
+                <input
+                  type="text"
+                  class="s-input"
+                  id="search-input"
+                  placeholder="Cari nama / nomor..."
+                  oninput="debounceSearch()"
+                />
+                <select
+                  class="s-select"
+                  id="filter-status"
+                  onchange="loadList(1)"
+                >
+                  <option value="">Semua Status</option>
+                  <option value="draft">Draft</option>
+                  <option value="pending">Pending</option>
+                  <option value="verified">Verified</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="loadList(1)">
+                  Cari
+                </button>
+              </div>
+              <div style="overflow-x: auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nama & Email</th>
+                      <th>No. Pendaftaran</th>
+                      <th>Prodi Pilihan 1</th>
+                      <th>Status</th>
+                      <th>Tanggal</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="list-tbody"></tbody>
+                </table>
+              </div>
+              <div class="pagination" id="pagination"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- MODAL DETAIL -->
+    <div id="modal-detail" class="overlay hidden">
+      <div class="modal">
+        <div class="modal-hdr">
+          <h3>Detail Pendaftar</h3>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div id="modal-content"></div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL STATUS -->
+    <div id="modal-status" class="overlay hidden">
+      <div class="modal modal-sm">
+        <div class="modal-hdr">
+          <h3>Update Status Pendaftar</h3>
+          <button class="modal-close" onclick="closeStatusModal()">✕</button>
+        </div>
+        <input type="hidden" id="status-applicant-id" />
+        <div class="form-group">
+          <label>Status Baru</label>
+          <select
+            id="status-select"
+            class="s-select"
+            style="width: 100%; padding: 11px 14px; border-radius: 9px"
+          >
+            <option value="pending">⏳ Pending — Menunggu Verifikasi</option>
+            <option value="verified">🔵 Verified — Sudah Diverifikasi</option>
+            <option value="accepted">✅ Accepted — Diterima</option>
+            <option value="rejected">❌ Rejected — Ditolak</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Catatan untuk Pendaftar (opsional)</label>
+          <textarea
+            id="status-catatan"
+            placeholder="Catatan jika diperlukan..."
+          ></textarea>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost btn-sm" onclick="closeStatusModal()">
+            Batal
+          </button>
+          <button
+            class="btn btn-primary btn-sm"
+            onclick="confirmUpdateStatus()"
+          >
+            ✓ Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+      let currentAdminView = "dashboard";
+      let currentPage = 1;
+      let searchTimeout = null;
+
+      /** Cek sesi, pastikan role admin */
+      async function init() {
+        const res = await api("auth.php?action=check");
+        if (!res.loggedIn || res.role !== "admin") {
+          window.location.href = "index.html";
+          return;
+        }
+        adminNav("dashboard");
+      }
+
+      function adminNav(view) {
+        currentAdminView = view;
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach((el) => el.classList.remove("active"));
+        const el = document.getElementById("nav-" + view);
+        if (el) el.classList.add("active");
+        document
+          .getElementById("admin-view-dashboard")
+          .classList.toggle("hidden", view !== "dashboard");
+        document
+          .getElementById("admin-view-list")
+          .classList.toggle("hidden", view === "dashboard");
+        if (view === "dashboard") {
+          loadDashboard();
+          return;
+        }
+
+        const fm = {
+          pending: "pending",
+          all: "",
+          accepted: "accepted",
+          rejected: "rejected",
+          verified: "verified",
+        };
+        const tm = {
+          pending: "Menunggu Verifikasi",
+          all: "Semua Pendaftar",
+          accepted: "Pendaftar Diterima",
+          rejected: "Pendaftar Ditolak",
+          verified: "Sudah Terverifikasi",
+        };
+        document.getElementById("list-title").textContent =
+          tm[view] || "Daftar";
+        document.getElementById("filter-status").value = fm[view] ?? "";
+        document.getElementById("search-input").value = "";
+        loadList(1);
+      }
+
+      async function loadDashboard() {
+        const res = await api("admin.php?action=dashboard");
+        if (!res.success) return;
+        const { stats, recent } = res;
+        document.getElementById("badge-pending").textContent =
+          stats.pending || 0;
+        document.getElementById("stats-grid").innerHTML = `
+          <div class="stat-tile"><div class="stat-ico">👥</div><div class="stat-num">${stats.total}</div><div class="stat-lbl">Total Pendaftar</div></div>
+          <div class="stat-tile"><div class="stat-ico">📝</div><div class="stat-num cg">${stats.draft}</div><div class="stat-lbl">Draft</div></div>
+          <div class="stat-tile"><div class="stat-ico">⏳</div><div class="stat-num cy">${stats.pending}</div><div class="stat-lbl">Menunggu</div></div>
+          <div class="stat-tile"><div class="stat-ico">🔵</div><div class="stat-num cb">${stats.verified}</div><div class="stat-lbl">Terverifikasi</div></div>
+          <div class="stat-tile"><div class="stat-ico">✅</div><div class="stat-num cs">${stats.accepted}</div><div class="stat-lbl">Diterima</div></div>
+          <div class="stat-tile"><div class="stat-ico">❌</div><div class="stat-num cr">${stats.rejected}</div><div class="stat-lbl">Ditolak</div></div>`;
+        document.getElementById("recent-tbody").innerHTML = recent.length
+          ? recent
+              .map(
+                (r) =>
+                  `<tr>
+                <td><strong>${r.nama_lengkap || '<span style="color:var(--muted)">Belum diisi</span>'}</strong></td>
+                <td><code style="color:var(--gold);font-size:12px">${r.nomor_pendaftaran}</code></td>
+                <td>${statusBadge(r.status)}</td>
+                <td style="color:var(--muted)">${fmtDate(r.updated_at)}</td>
+              </tr>`,
+              )
+              .join("")
+          : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:28px">Belum ada data</td></tr>';
+      }
+
+      async function loadList(page) {
+        currentPage = page;
+        const status = document.getElementById("filter-status").value;
+        const search = document.getElementById("search-input").value;
+        const res = await api(
+          `admin.php?action=list&page=${page}&status=${encodeURIComponent(status)}&search=${encodeURIComponent(search)}`,
+        );
+        if (!res.success) return;
+        document.getElementById("list-count").textContent =
+          `${res.total} pendaftar ditemukan`;
+        document.getElementById("list-tbody").innerHTML = res.data.length
+          ? res.data
+              .map(
+                (r) =>
+                  `<tr>
+                <td><div style="font-weight:600">${r.nama_lengkap || '<span style="color:var(--muted)">Belum diisi</span>'}</div><div class="td-sub">${r.email}</div></td>
+                <td><code style="color:var(--gold);font-size:12px">${r.nomor_pendaftaran}</code></td>
+                <td style="font-size:12px;color:var(--gray)">${r.pilihan_prodi_1 || "—"}</td>
+                <td>${statusBadge(r.status)}</td>
+                <td style="color:var(--muted);font-size:12px">${fmtDate(r.updated_at)}</td>
+                <td><div class="action-group">
+                  <button class="btn btn-blue btn-xs" onclick="showDetail(${r.id})">Detail</button>
+                  <button class="btn btn-ghost btn-xs" onclick="openStatusModal(${r.id},'${r.status}')">Status</button>
+                  <button class="btn btn-danger btn-xs" onclick="deleteApplicant(${r.id},'${(r.nama_lengkap || "ini").replace(/'/g, "\\'")}')">Hapus</button>
+                </div></td>
+              </tr>`,
+              )
+              .join("")
+          : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Tidak ada data</td></tr>';
+
+        let pg = `<button class="pg-btn" onclick="loadList(${page - 1})" ${page <= 1 ? "disabled" : ""}>‹</button>`;
+        for (let i = 1; i <= res.pages; i++) {
+          if (i === 1 || i === res.pages || Math.abs(i - page) <= 1)
+            pg += `<button class="pg-btn ${i === page ? "active" : ""}" onclick="loadList(${i})">${i}</button>`;
+          else if (Math.abs(i - page) === 2)
+            pg += `<span style="color:var(--muted);padding:0 2px">…</span>`;
+        }
+        pg += `<button class="pg-btn" onclick="loadList(${page + 1})" ${page >= res.pages ? "disabled" : ""}>›</button>`;
+        document.getElementById("pagination").innerHTML =
+          res.pages > 1 ? pg : "";
+      }
+
+      function debounceSearch() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => loadList(1), 380);
+      }
+
+      async function showDetail(id) {
+        const res = await api(`admin.php?action=detail&id=${id}`);
+        if (!res.success) {
+          toast("Gagal memuat detail", "error");
+          return;
+        }
+        const d = res.data;
+        const fields = [
+          ["Nomor Pendaftaran", d.nomor_pendaftaran],
+          ["Email", d.email],
+          ["Nama Lengkap", d.nama_lengkap],
+          [
+            "Jenis Kelamin",
+            d.jenis_kelamin === "L"
+              ? "Laki-laki"
+              : d.jenis_kelamin === "P"
+                ? "Perempuan"
+                : "—",
+          ],
+          ["Tempat Lahir", d.tempat_lahir],
+          ["Tanggal Lahir", fmtDate(d.tanggal_lahir)],
+          ["No. Telepon", d.no_telepon],
+          ["Asal Sekolah", d.asal_sekolah],
+          ["Jurusan", d.jurusan_sekolah],
+          ["Tahun Lulus", d.tahun_lulus],
+          ["Prodi Pilihan 1", d.pilihan_prodi_1],
+          ["Prodi Pilihan 2", d.pilihan_prodi_2 || "—"],
+          ["Jalur Seleksi", d.jalur_seleksi || "—"],
+          ["Kota", d.kota],
+          ["Provinsi", d.provinsi],
+          ["Tgl. Daftar", fmtDate(d.tgl_daftar)],
+          ["Status", null],
+        ];
+        let html = '<div class="detail-grid">';
+        fields.forEach(([l, v]) => {
+          html += `<div class="detail-item"><label>${l}</label><span>${l === "Status" ? statusBadge(d.status) : v || "—"}</span></div>`;
+          if (l === "Email") html += '<div class="detail-divider"></div>';
+        });
+        html += "</div>";
+        if (d.catatan_admin)
+          html += `<div class="catatan-box"><strong>Catatan:</strong> ${d.catatan_admin}</div>`;
+
+        if (d.foto || d.ijazah) {
+          html += `<div style="margin-top:16px;display:flex;gap:20px;flex-wrap:wrap;">`;
+          if (d.foto) {
+            const fotoSrc = d.foto_url || "api/uploads/" + d.foto;
+            html += `<div>
+              <p style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📷 Foto 3×4</p>
+              <img src="${fotoSrc}" style="width:90px;height:110px;object-fit:cover;border-radius:8px;border:2px solid var(--gold);display:block;"
+                onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2290%22 height=%22110%22%3E%3Crect width=%2290%22 height=%22110%22 fill=%22%23132035%22 rx=%228%22/%3E%3Ctext x=%2245%22 y=%2260%22 font-size=%2232%22 text-anchor=%22middle%22 fill=%22%23c9a227%22%3E%F0%9F%93%B7%3C/text%3E%3C/svg%3E';"
+                alt="Foto Pendaftar">
+              <a href="${fotoSrc}" target="_blank" style="display:block;margin-top:6px;font-size:11px;color:var(--gold);text-decoration:none;">🔗 Buka foto</a>
+            </div>`;
+          }
+          if (d.ijazah) {
+            const ijazahSrc = d.ijazah_url || "api/uploads/" + d.ijazah;
+            const ext = d.ijazah.split(".").pop().toLowerCase();
+            if (ext === "pdf") {
+              html += `<div>
+                <p style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📑 Ijazah / SKL</p>
+                <div style="width:90px;height:110px;background:rgba(201,162,39,.08);border:2px solid rgba(201,162,39,.3);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+                  <span style="font-size:28px">📄</span>
+                  <span style="font-size:10px;color:var(--muted)">PDF</span>
+                </div>
+                <a href="${ijazahSrc}" target="_blank" style="display:block;margin-top:6px;font-size:11px;color:var(--gold);text-decoration:none;">🔗 Buka PDF</a>
+              </div>`;
+            } else {
+              html += `<div>
+                <p style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📑 Ijazah / SKL</p>
+                <img src="${ijazahSrc}" style="width:90px;height:110px;object-fit:cover;border-radius:8px;border:2px solid var(--gold);display:block;"
+                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2290%22 height=%22110%22%3E%3Crect width=%2290%22 height=%22110%22 fill=%22%23132035%22 rx=%228%22/%3E%3Ctext x=%2245%22 y=%2260%22 font-size=%2232%22 text-anchor=%22middle%22 fill=%22%23c9a227%22%3E%F0%9F%93%91%3C/text%3E%3C/svg%3E';"
+                  alt="Ijazah">
+                <a href="${ijazahSrc}" target="_blank" style="display:block;margin-top:6px;font-size:11px;color:var(--gold);text-decoration:none;">🔗 Buka ijazah</a>
+              </div>`;
+            }
+          }
+          html += `</div>`;
+        }
+
+        document.getElementById("modal-content").innerHTML = html;
+        document.getElementById("modal-detail").classList.remove("hidden");
+      }
+
+      function closeModal() {
+        document.getElementById("modal-detail").classList.add("hidden");
+      }
+      function closeStatusModal() {
+        document.getElementById("modal-status").classList.add("hidden");
+      }
+
+      function openStatusModal(id, status) {
+        document.getElementById("status-applicant-id").value = id;
+        document.getElementById("status-select").value = status;
+        document.getElementById("status-catatan").value = "";
+        document.getElementById("modal-status").classList.remove("hidden");
+      }
+
+      async function confirmUpdateStatus() {
+        const id = document.getElementById("status-applicant-id").value;
+        const status = document.getElementById("status-select").value;
+        const catatan = document.getElementById("status-catatan").value;
+        const res = await api("admin.php?action=update_status", "POST", {
+          id,
+          status,
+          catatan,
+        });
+        toast(res.message, res.success ? "success" : "error");
+        closeStatusModal();
+        if (res.success) {
+          loadList(currentPage);
+          if (currentAdminView === "dashboard") loadDashboard();
+        }
+      }
+
+      async function deleteApplicant(id, nama) {
+        if (
+          !confirm(
+            `Hapus pendaftar "${nama}"?\nTindakan ini tidak dapat dibatalkan.`,
+          )
+        )
+          return;
+        const res = await api("admin.php?action=delete", "DELETE", { id });
+        toast(res.message, res.success ? "success" : "error");
+        if (res.success) {
+          loadList(currentPage);
+          loadDashboard();
+        }
+      }
+
+      // Modal: tutup saat klik backdrop
+      document.getElementById("modal-detail").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) closeModal();
+      });
+      document.getElementById("modal-status").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) closeStatusModal();
+      });
+      // ESC key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeModal();
+          closeStatusModal();
+        }
+      });
+
+      init();
+    </script>
+  </body>
+</html>
