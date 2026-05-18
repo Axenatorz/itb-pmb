@@ -606,6 +606,11 @@
                 type="text"
                 id="f-nama"
                 placeholder="Sesuai KTP / Ijazah"
+                maxlength="30"
+                oninput="
+                  if (this.value.length > 30)
+                    this.value = this.value.slice(0, 30);
+                "
               />
             </div>
             <div class="form-group">
@@ -614,6 +619,11 @@
                 type="text"
                 id="f-tempat-lahir"
                 placeholder="Kota kelahiran"
+                maxlength="30"
+                oninput="
+                  if (this.value.length > 30)
+                    this.value = this.value.slice(0, 30);
+                "
               />
             </div>
             <div class="form-group">
@@ -630,7 +640,16 @@
             </div>
             <div class="form-group">
               <label>No. Telepon / HP</label>
-              <input type="tel" id="f-telp" placeholder="08xxxxxxxxxx" />
+              <input
+                type="number"
+                id="f-telp"
+                placeholder="08xxxxxxxxxx"
+                maxlength="14"
+                oninput="
+                  if (this.value.length > 14)
+                    this.value = this.value.slice(0, 14);
+                "
+              />
             </div>
           </div>
         </div>
@@ -649,6 +668,11 @@
               <textarea
                 id="f-alamat"
                 placeholder="Jalan, nomor rumah, RT/RW, kelurahan, kecamatan"
+                maxlength="60"
+                oninput="
+                  if (this.value.length > 60)
+                    this.value = this.value.slice(0, 60);
+                "
               ></textarea>
             </div>
             <div class="form-group">
@@ -662,7 +686,7 @@
             <div class="form-group">
               <label>Kode Pos</label>
               <input
-                type="text"
+                type="number"
                 id="f-kodepos"
                 placeholder="40132"
                 maxlength="5"
@@ -686,6 +710,11 @@
                 type="text"
                 id="f-sekolah"
                 placeholder="Nama lengkap sekolah"
+                maxlength="40"
+                oninput="
+                  if (this.value.length > 40)
+                    this.value = this.value.slice(0, 40);
+                "
               />
             </div>
             <div class="form-group">
