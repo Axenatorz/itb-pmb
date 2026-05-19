@@ -677,11 +677,46 @@
             </div>
             <div class="form-group">
               <label>Kota / Kabupaten</label>
-              <input type="text" id="f-kota" placeholder="Nama kota" />
+              <select id="f-kota">
+                <option value="">Pilih...</option>
+                <option>Jakarta</option>
+                <option>Bandung</option>
+                <option>Surabaya</option>
+                <option>Semarang</option>
+                <option>Medan</option>
+                <option>Palembang</option>
+                <option>Yogyakarta</option>
+              </select>
             </div>
             <div class="form-group">
               <label>Provinsi</label>
-              <input type="text" id="f-provinsi" placeholder="Nama provinsi" />
+              <select id="f-provinsi">
+                <option value="">Pilih...</option>
+                <option>Jawa Barat</option>
+                <option>Jawa Tengah</option>
+                <option>Jawa Timur</option>
+                <option>Bali</option>
+                <option>Sumatra Barat</option>
+                <option>Sumatra Utara</option>
+                <option>Nusa Tenggara Barat</option>
+                <option>Nusa Tenggara Timur</option>
+                <option>Kalimantan Selatan</option>
+                <option>Kalimantan Tengah</option>
+                <option>Kalimantan Timur</option>
+                <option>Kalimantan Utara</option>
+                <option>Kalimantan Barat</option>
+                <option>Sulawesi Selatan</option>
+                <option>Sulawesi Tenggara</option>
+                <option>Sulawesi Utara</option>
+                <option>Sulawesi Tengah</option>
+                <option>Sulawesi Barat</option>
+                <option>Gorontalo</option>
+                <option>Maluku</option>
+                <option>Maluku Utara</option>
+                <option>Papua</option>
+                <option>Papua Barat</option>
+                <option>Lainnya</option>
+              </select>
             </div>
             <div class="form-group">
               <label>Kode Pos</label>
@@ -690,6 +725,10 @@
                 id="f-kodepos"
                 placeholder="40132"
                 maxlength="5"
+                oninput="
+                  if (this.value.length > 10)
+                    this.value = this.value.slice(0, 10);
+                "
               />
             </div>
           </div>
