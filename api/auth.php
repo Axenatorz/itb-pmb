@@ -20,7 +20,8 @@ switch ($action) {
         echo json_encode(['success' => false, 'message' => 'Action tidak valid']);
 }
 
-function handleRegister() {
+function handleRegister()
+{
     $data = json_decode(file_get_contents('php://input'), true);
     $email = trim($data['email'] ?? '');
     $password = $data['password'] ?? '';
@@ -81,7 +82,8 @@ function handleRegister() {
     $db->close();
 }
 
-function handleLogin() {
+function handleLogin()
+{
     $data = json_decode(file_get_contents('php://input'), true);
     $email = trim($data['email'] ?? '');
     $password = $data['password'] ?? '';
@@ -120,12 +122,14 @@ function handleLogin() {
     $db->close();
 }
 
-function handleLogout() {
+function handleLogout()
+{
     session_destroy();
     echo json_encode(['success' => true, 'message' => 'Logout berhasil']);
 }
 
-function handleCheck() {
+function handleCheck()
+{
     if (isLoggedIn()) {
         $db = getDB();
         $stmt = $db->prepare("SELECT a.*, u.email, u.nomor_pendaftaran, u.role FROM applicants a JOIN users u ON a.user_id = u.id WHERE u.id = ?");
@@ -143,4 +147,3 @@ function handleCheck() {
         echo json_encode(['success' => true, 'loggedIn' => false]);
     }
 }
-?>

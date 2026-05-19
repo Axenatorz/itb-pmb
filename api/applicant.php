@@ -20,7 +20,8 @@ switch ($action) {
         echo json_encode(['success' => false, 'message' => 'Action tidak valid']);
 }
 
-function handleGet() {
+function handleGet()
+{
     requireLogin();
     $db = getDB();
     $stmt = $db->prepare("SELECT a.*, u.email, u.nomor_pendaftaran FROM applicants a JOIN users u ON a.user_id = u.id WHERE u.id = ?");
@@ -38,7 +39,8 @@ function handleGet() {
     $db->close();
 }
 
-function handleUpdate() {
+function handleUpdate()
+{
     requireLogin();
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -87,7 +89,8 @@ function handleUpdate() {
     $db->close();
 }
 
-function handleUpload() {
+function handleUpload()
+{
     requireLogin();
 
     $type = $_POST['type'] ?? '';
@@ -148,7 +151,8 @@ function handleUpload() {
     $db->close();
 }
 
-function handleSubmit() {
+function handleSubmit()
+{
     requireLogin();
     $db = getDB();
 
@@ -177,4 +181,3 @@ function handleSubmit() {
     echo json_encode(['success' => true, 'message' => 'Pendaftaran berhasil disubmit, menunggu verifikasi admin']);
     $db->close();
 }
-?>

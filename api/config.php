@@ -14,7 +14,8 @@ $basePath = rtrim(dirname(dirname($script)), '/\\');
 define('BASE_URL',    $protocol . '://' . $host . $basePath);
 define('UPLOAD_URL',  BASE_URL . '/api/uploads/');
 
-function getDB() {
+function getDB()
+{
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if ($conn->connect_error) {
         die(json_encode(['success' => false, 'message' => 'Koneksi database gagal: ' . $conn->connect_error]));
@@ -25,29 +26,34 @@ function getDB() {
 
 session_start();
 
-function isLoggedIn() {
+function isLoggedIn()
+{
     return isset($_SESSION['user_id']);
 }
 
-function isAdmin() {
+function isAdmin()
+{
     return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 }
 
-function requireLogin() {
+function requireLogin()
+{
     if (!isLoggedIn()) {
         header('Location: ' . BASE_URL . '/index.html');
         exit;
     }
 }
 
-function requireAdmin() {
+function requireAdmin()
+{
     if (!isAdmin()) {
         header('Location: ' . BASE_URL . '/index.html');
         exit;
     }
 }
 
-function generateNomorPendaftaran() {
+function generateNomorPendaftaran()
+{
     return 'ITB' . date('Y') . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
 }
 
@@ -59,4 +65,3 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
-?>
