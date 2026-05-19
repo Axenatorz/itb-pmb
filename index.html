@@ -278,6 +278,10 @@
               id="login-email"
               placeholder="email@contoh.com"
               autocomplete="email"
+              oninput="
+                if (this.value.length > 25)
+                  this.value = this.value.slice(0, 25);
+              "
             />
           </div>
           <div class="form-group">
@@ -288,6 +292,10 @@
                 id="login-password"
                 placeholder="••••••••"
                 autocomplete="current-password"
+                oninput="
+                  if (this.value.length > 60)
+                    this.value = this.value.slice(0, 60);
+                "
               />
               <button
                 type="button"
@@ -333,6 +341,10 @@
                 type="email"
                 id="reg-email"
                 placeholder="email@contoh.com"
+                oninput="
+                  if (this.value.length > 25)
+                    this.value = this.value.slice(0, 25);
+                "
               />
             </div>
             <div class="form-group">
@@ -342,6 +354,10 @@
                   type="password"
                   id="reg-password"
                   placeholder="Minimal 8 karakter"
+                  oninput="
+                    if (this.value.length > 60)
+                      this.value = this.value.slice(0, 60);
+                  "
                 />
                 <button
                   type="button"
@@ -360,6 +376,10 @@
                   type="password"
                   id="reg-password2"
                   placeholder="Ulangi password"
+                  oninput="
+                    if (this.value.length > 60)
+                      this.value = this.value.slice(0, 60);
+                  "
                 />
                 <button
                   type="button"
