@@ -414,10 +414,10 @@
       .header-website {
         display: flex;
         align-items: center;
-        width: clamp(160px, 25vw, 440px);
-        height: 52px;
+        width: clamp(100px, 18vw, 300px);
+        height: 44px;
         background-image: url("backgrounditb.jpg");
-        margin-left: 0.5rem;
+        margin-left: 1rem;
         border-radius: 10px;
         background-size: cover;
         background-position: center;
@@ -480,33 +480,12 @@
         .admin-topbar {
           padding: 0 14px;
           height: 54px;
-          position: sticky;
-          top: 0;
-          z-index: 50;
         }
-        /* Reset fixed-height layout — allow normal page scroll on mobile */
-        body {
-          height: auto !important;
-          overflow: visible !important;
-          display: block !important;
-        }
-        .admin-body {
-          overflow: visible !important;
-          display: block !important;
-          flex: none !important;
-        }
-        .admin-main {
-          overflow: visible !important;
-          height: auto !important;
-        }
-        /* Sidebar slides in as overlay */
         .admin-sidebar {
           position: fixed;
           left: -260px;
           top: 0;
           bottom: 0;
-          height: 100vh !important;
-          overflow-y: auto !important;
           z-index: 99;
           transition: left 0.25s ease;
           width: var(--sidebar-w);
