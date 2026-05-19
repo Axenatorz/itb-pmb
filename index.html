@@ -157,12 +157,13 @@
       .header-website {
         display: flex;
         align-items: center;
-        width: 28rem;
-        height: 50px;
+        width: clamp(180px, 28vw, 480px);
+        height: 56px;
         background-image: url("backgrounditb.jpg");
-        margin-right: 7rem;
         border-radius: 10px;
         background-size: cover;
+        background-position: center;
+        flex-shrink: 0;
       }
 
       /* ══ PASSWORD TOGGLE ══ */
@@ -199,6 +200,25 @@
         .hero {
           grid-template-columns: 1fr;
           padding: 40px 24px;
+          gap: 32px;
+        }
+        .hero h2 {
+          font-size: clamp(26px, 6vw, 40px);
+        }
+      }
+      @media (max-width: 600px) {
+        .hero {
+          padding: 28px 16px 40px;
+          gap: 24px;
+        }
+        .auth-card {
+          padding: 20px 16px;
+        }
+        .hero p {
+          font-size: 14px;
+        }
+        .header-website {
+          display: none;
         }
       }
     </style>

@@ -414,44 +414,163 @@
       .header-website {
         display: flex;
         align-items: center;
-        width: 28rem;
-        height: 50px;
+        width: clamp(160px, 25vw, 440px);
+        height: 52px;
         background-image: url("backgrounditb.jpg");
-        margin-left: 4rem;
+        margin-left: 0.5rem;
         border-radius: 10px;
         background-size: cover;
+        background-position: center;
+        flex-shrink: 0;
       }
 
+      /* Hamburger button (mobile only) */
+      .hamburger-btn {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(201, 162, 39, 0.08);
+        border: 1px solid var(--border);
+        cursor: pointer;
+        font-size: 18px;
+        flex-shrink: 0;
+        transition: background 0.18s;
+      }
+      .hamburger-btn:hover {
+        background: rgba(201, 162, 39, 0.15);
+      }
+
+      /* Mobile sidebar overlay */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        z-index: 98;
+        backdrop-filter: blur(4px);
+      }
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      /* Table responsive wrapper */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      @media (max-width: 900px) {
+        .stats-row {
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+        .tcard-head {
+          flex-wrap: wrap;
+        }
+        .s-input {
+          width: 140px;
+        }
+      }
       @media (max-width: 680px) {
+        .hamburger-btn {
+          display: flex;
+        }
         .admin-topbar {
           padding: 0 14px;
+          height: 54px;
+          position: sticky;
+          top: 0;
+          z-index: 50;
         }
+        /* Reset fixed-height layout — allow normal page scroll on mobile */
+        body {
+          height: auto !important;
+          overflow: visible !important;
+          display: block !important;
+        }
+        .admin-body {
+          overflow: visible !important;
+          display: block !important;
+          flex: none !important;
+        }
+        .admin-main {
+          overflow: visible !important;
+          height: auto !important;
+        }
+        /* Sidebar slides in as overlay */
         .admin-sidebar {
-          display: none;
+          position: fixed;
+          left: -260px;
+          top: 0;
+          bottom: 0;
+          height: 100vh !important;
+          overflow-y: auto !important;
+          z-index: 99;
+          transition: left 0.25s ease;
+          width: var(--sidebar-w);
+        }
+        .admin-sidebar.open {
+          left: 0;
         }
         .admin-content {
-          padding: 20px 16px;
+          padding: 16px 14px 40px;
         }
         .detail-grid {
           grid-template-columns: 1fr;
+        }
+        .header-website {
+          display: none;
+        }
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .tcard-head {
+          gap: 7px;
+        }
+        .s-input {
+          width: 100%;
+          flex: 1;
+          min-width: 0;
+        }
+        th, td {
+          padding: 9px 10px;
+          font-size: 12px;
+        }
+        .action-group {
+          flex-direction: column;
+        }
+        .pagination {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .adm-user span {
+          display: none;
         }
       }
     </style>
   </head>
   <body>
     <!-- TOPBAR ADMIN -->
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <div class="admin-topbar">
-      <div class="adm-logo">
-        <img
-          class="logo-badge"
-          src="logoitb.jpg"
-          alt="ITB"
-          width="45"
-          height="45;"
-        />
-        <div class="adm-logo-text">
-          <h2>Admin Panel</h2>
-          <span>PMB ITB 2026</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+        <div class="adm-logo">
+          <img
+            class="logo-badge"
+            src="logoitb.jpg"
+            alt="ITB"
+            width="45"
+            height="45;"
+          />
+          <div class="adm-logo-text">
+            <h2>Admin Panel</h2>
+            <span>PMB ITB 2026</span>
+          </div>
         </div>
       </div>
       <a href="https://itb.ac.id/" class="header-link">
@@ -539,6 +658,7 @@
             <div class="stats-row" id="stats-grid"></div>
             <div class="tcard">
               <div class="tcard-head"><h3>Aktivitas Terbaru</h3></div>
+              <div class="table-scroll">
               <table>
                 <thead>
                   <tr>
@@ -550,6 +670,7 @@
                 </thead>
                 <tbody id="recent-tbody"></tbody>
               </table>
+              </div>
             </div>
           </div>
 
@@ -585,7 +706,7 @@
                   Cari
                 </button>
               </div>
-              <div style="overflow-x: auto">
+              <div class="table-scroll">
                 <table>
                   <thead>
                     <tr>
@@ -940,6 +1061,34 @@
       });
 
       init();
+    </script>
+    <script>
+      /* ── Mobile Sidebar Toggle ── */
+      function toggleSidebar() {
+        const sidebar = document.querySelector('.admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const isOpen = sidebar.classList.contains('open');
+        if (isOpen) {
+          closeSidebar();
+        } else {
+          sidebar.classList.add('open');
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+      function closeSidebar() {
+        const sidebar = document.querySelector('.admin-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      // Close sidebar on nav item click (mobile)
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (window.innerWidth <= 680) closeSidebar();
+        });
+      });
     </script>
   </body>
 </html>

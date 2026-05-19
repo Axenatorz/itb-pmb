@@ -455,12 +455,13 @@
       .header-website {
         display: flex;
         align-items: center;
-        width: 28rem;
-        height: 50px;
+        width: clamp(180px, 28vw, 480px);
+        height: 56px;
         background-image: url("backgrounditb.jpg");
-        margin-right: 8rem;
         border-radius: 10px;
         background-size: cover;
+        background-position: center;
+        flex-shrink: 0;
       }
 
       @media (max-width: 900px) {
@@ -481,10 +482,44 @@
           flex-wrap: wrap;
           gap: 12px;
         }
+        .pengumuman-row {
+          grid-template-columns: 1fr;
+        }
       }
       @media (max-width: 680px) {
         .dash-wrap {
-          padding: 24px 16px 40px;
+          padding: 20px 14px 40px;
+        }
+        .dash-topbar {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .prog-bar {
+          padding: 14px 16px;
+        }
+        .sec-body {
+          padding: 14px;
+        }
+        .form-actions {
+          flex-direction: column-reverse;
+        }
+        .form-actions .btn {
+          width: 100%;
+          justify-content: center;
+        }
+        .header-website {
+          display: none;
+        }
+        .pengumuman-header {
+          padding: 14px 16px;
+        }
+        .pengumuman-body {
+          padding: 14px 16px;
+        }
+        .pengumuman-watermark {
+          font-size: 60px;
+          opacity: 0.03;
         }
       }
     </style>
